@@ -33,7 +33,7 @@ impl Server {
                     Ok(request) => {},
                     Err(e) => println!("Failed to parse a request: {}", e)
                   }
-                  let res: &Result<Request, _> = &buffer[..].try_into();
+                  // let res: &Result<Request, _> = &buffer[..].try_into();
                 },
                 Err(e) => println!("Failed to read from connection: {}", e),
               }
