@@ -1,11 +1,20 @@
 use std::net::TcpListener;
 use std::io::{Read, Write};
-use crate::http::{ParseError, Request, Response, StatusCode};
+use crate::http::{ParseError, Request, Response, StatusCode, Method};
 use std::convert::TryFrom;
 use std::convert::TryInto;
 
 pub trait Handler {
-    fn handle_request(&mut self, request: &Request) -> Response;
+    fn handle_request(&mut self, request: &Request) -> Response {
+      match request.method() {
+          Method::GET => match request.path() {
+            "/" => Response::new(StatusCode::Ok, Some("<h1>Welcome</h1>".to_string())),
+            "/hello" => Response::new(StatusCode::Ok, Some("<h1>Hello</h1>".to_string())),
+            _ => Response::new(StatusCode::NotFound, None),
+          }
+          _ => Response::new(StatusCode::NotFound, None),
+        }
+    }
 
     fn handle_bad_request(&mut self, e: &ParseError) -> Response {
         println!("Failed to parse request: {}", e);
